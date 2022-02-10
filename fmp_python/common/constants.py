@@ -1,4 +1,5 @@
 BASE_URL = "https://financialmodelingprep.com/api/v3"
+HISTORICAL_BASE_URL = "https://financialmodelingprep.com/api/v3/historical"
 INDEX_PREFIX = "^"
 SUPPORTED_INTERVALS = ["1min","5min","15min","30min","1hour","4hour"]
 SUPPORTED_CATEGORIES = [
@@ -31,5 +32,6 @@ SUPPORTED_CATEGORIES = [
     'losers',
     'market-hours',
     'sectors-performance',
-    'financial-statement-symbol-lists'
+    'financial-statement-symbol-lists',
+    'historical/earning_calendar'
 ]
