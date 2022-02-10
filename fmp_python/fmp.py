@@ -170,5 +170,18 @@ class FMP(object):
         hp = self.__do_request__(rb.compile_request())
         return hp
 
+    @FMPDecorator.write_to_file
+    @FMPDecorator.format_data
+    def get_earning_call_transcript(self, symbol: str, quarter: str=None, year: str=None):
+        rb = RequestBuilder(self.api_key, api_version=4)
+        rb.set_category('earning_call_transcript')
+        rb.add_query_param({'symbol': symbol})
+        if (quarter):
+            rb.add_query_param({'quarter': quarter})
+        if (year):
+            rb.add_query_param({'year': year})
+        hp = self.__do_request__(rb.compile_request())
+        return hp
+
     def __do_request__(self,url):
         return requests.get(url)

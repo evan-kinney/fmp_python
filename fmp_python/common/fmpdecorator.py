@@ -35,6 +35,22 @@ class FMPDecorator():
                 raise FMPException("Output must be either pandas or json",FMPDecorator.format_data.__name__) 
 
         return _call_wrapper
+
+    @classmethod
+    def format_earning_call_transcript(cls, func):
+        @functools.wraps(func)
+        def _call_wrapper(self, *args, **kwargs):
+            response = func(self, *args, **kwargs)
+            return response.json()
+            # if self.output_format=='json':
+            #     return response.json()
+            # elif self.output_format=='pandas':
+            #     return pd.DataFrame(response.json()) 
+            # else:
+            #     raise FMPException("Output must be either pandas or json",FMPDecorator.format_data.__name__) 
+
+        return _call_wrapper
+
     @classmethod
     def format_historical_data(cls,func):
         @functools.wraps(func)

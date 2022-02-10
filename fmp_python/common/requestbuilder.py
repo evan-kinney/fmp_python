@@ -6,9 +6,10 @@ from fmp_python.common.fmpexception import FMPException
 
 class RequestBuilder(object):
 
-    def __init__(self, api_key):
+    def __init__(self, api_key, api_version=3):
         self.api_key = api_key
-        self.__base_url = BASE_URL
+        self.api_version = api_version
+        self.__base_url = f'{BASE_URL}/v{self.api_version}'
         self.__category = None
         self.__subcategories = []
         self.__query_params = {}
@@ -21,7 +22,10 @@ class RequestBuilder(object):
 
     def __build_subcategories(self):
         subcategories = '/'.join(self.__subcategories)
-        return ''.join(['/', subcategories]) if subcategories else ''
+        if (self.api_version == 3):
+            return ''.join(['/', subcategories]) if subcategories else ''
+        elif (self.api_version == 4):
+            return ''.join(['?', subcategories]) if subcategories else ''
     
     def __build_query_params(self):
         if len(self.__query_params) ==  0:
