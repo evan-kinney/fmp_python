@@ -95,5 +95,18 @@ class FMP(object):
         hp = self.__do_request__(rb.compile_request())
         return hp
 
+    @FMPDecorator.write_to_file
+    @FMPDecorator.format_data
+    def get_enterprise_values(self, symbol: str, period: str=None, limit: int=None):
+        rb = RequestBuilder(self.api_key)
+        rb.set_category('enterprise-values')
+        rb.add_sub_category(symbol)
+        if (period):
+            rb.add_query_param({'period': period})
+        if (limit):
+            rb.add_query_param({'limit': limit})
+        hp = self.__do_request__(rb.compile_request())
+        return hp
+
     def __do_request__(self,url):
         return requests.get(url)
