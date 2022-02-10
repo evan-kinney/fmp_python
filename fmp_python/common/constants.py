@@ -30,5 +30,6 @@ SUPPORTED_CATEGORIES = [
     'gainers',
     'losers',
     'market-hours',
-    'sectors-performance'
+    'sectors-performance',
+    'financial-statement-symbol-lists'
 ]
