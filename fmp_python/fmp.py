@@ -4,7 +4,7 @@ import os
 import io
 from datetime import datetime
 
-from fmp_python.common.constants import BASE_URL,INDEX_PREFIX
+from fmp_python.common.constants import BASE_URL, INDEX_PREFIX
 from fmp_python.common.requestbuilder import RequestBuilder
 from fmp_python.common.fmpdecorator import FMPDecorator
 from fmp_python.common.fmpvalidator import FMPValidator
@@ -76,7 +76,20 @@ class FMP(object):
         rb.set_category('key-metrics')
         rb.add_sub_category(symbol)
         if (period):
-            rb.add_query_param({'period':period})
+            rb.add_query_param({'period': period})
+        if (limit):
+            rb.add_query_param({'limit': limit})
+        hp = self.__do_request__(rb.compile_request())
+        return hp
+
+    @FMPDecorator.write_to_file
+    @FMPDecorator.format_data
+    def get_financial_growth(self, symbol: str, period: str=None, limit: int=None):
+        rb = RequestBuilder(self.api_key)
+        rb.set_category('financial-growth')
+        rb.add_sub_category(symbol)
+        if (period):
+            rb.add_query_param({'period': period})
         if (limit):
             rb.add_query_param({'limit': limit})
         hp = self.__do_request__(rb.compile_request())
