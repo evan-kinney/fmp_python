@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 import os
 import io
+import time
 from datetime import datetime
 
 from fmp_python.common.constants import BASE_URL, INDEX_PREFIX
@@ -183,5 +184,25 @@ class FMP(object):
         hp = self.__do_request__(rb.compile_request())
         return hp
 
-    def __do_request__(self,url):
-        return requests.get(url)
+    @FMPDecorator.write_to_file
+    @FMPDecorator.format_historical_data
+    def get_historical_price_full(self, symbol: str, from_date: str=None, to_date: str=None):
+        rb = RequestBuilder(self.api_key)
+        rb.set_category('historical-price-full')
+        rb.add_sub_category(symbol)
+        if (from_date):
+            rb.add_query_param({'from': from_date})
+        if (to_date):
+            rb.add_query_param({'to': to_date})
+        hp = self.__do_request__(rb.compile_request())
+        return hp
+
+    def __do_request__(self, url, retry: bool=True):
+        response = requests.get(url)
+        if not (response.ok) or not (response.json):
+            if (retry):
+                time.sleep(30)
+                response = self.__do_request__(url, retry=False)
+            else:
+                raise FMPException(f'url: {url} returned {response.status_code}', FMP.__do_request__.__name__)
+        return response 
