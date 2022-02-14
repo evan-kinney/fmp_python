@@ -33,5 +33,6 @@ SUPPORTED_CATEGORIES = [
     'sectors-performance',
     'financial-statement-symbol-lists',
     'historical/earning_calendar',
-    'earning_call_transcript'
+    'earning_call_transcript',
+    'analyst-estimates'
 ]

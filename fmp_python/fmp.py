@@ -197,6 +197,36 @@ class FMP(object):
         hp = self.__do_request__(rb.compile_request())
         return hp
 
+    @FMPDecorator.write_to_file
+    @FMPDecorator.format_data
+    def get_analyst_estimates(self, symbol: str, period: str=None, limit: int=None):
+        rb = RequestBuilder(self.api_key)
+        rb.set_category('analyst-estimates')
+        rb.add_sub_category(symbol)
+        if (period):
+            rb.add_query_param({'period': period})
+        if (limit):
+            rb.add_query_param({'limit': limit})
+        hp = self.__do_request__(rb.compile_request())
+        return hp
+
+    @FMPDecorator.write_to_file
+    def get_analyst_estimates_for_next_earnings_call(self, symbol: str):
+        original_output_format = self.output_format
+        self.output_format = 'pandas'
+        analyst_estimate = pd.DataFrame()
+        analyst_estimates = self.get_analyst_estimates(symbol, period='quarter', limit=15)
+        if (analyst_estimates.shape[0] > 1):
+            analyst_estimates['date'] = pd.to_datetime(analyst_estimates['date'])
+            analyst_estimates = analyst_estimates[analyst_estimates['date'] >= pd.to_datetime(datetime.now().date())]
+            analyst_estimates.sort_values(['date'], ascending=True, inplace=True)
+            analyst_estimate = analyst_estimates.head(1)
+        self.output_format = original_output_format
+        if (original_output_format == 'json'):
+            return analyst_estimate.to_json()
+        elif (original_output_format == 'pandas'):
+            return analyst_estimate
+
     def __do_request__(self, url, retry: bool=True):
         response = requests.get(url)
         if not (response.ok) or not (response.json):
